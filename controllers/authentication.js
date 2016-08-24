@@ -45,12 +45,9 @@ exports.signup = function(req, res, next) {
 				return next(err);
 			}
 
-			// success
+			// success - when the user signs up successfully we consider them signed in, so we need to send provide a token.
 			res.json({ token: tokenForUser(user) });
-
-			// when the user signs up successfully we consider them signed in, so we need to send provide a token.
 		});
-
 	});
 }
 
