@@ -1,4 +1,17 @@
+const jwt = require('jwt-simple');
+const config = require('../config');
 const User = require('../models/user');
+
+function tokenForUser(user) {
+	// encode with secret string
+	// sub is a standard - json web tokens have sub property, which is subject (who is this token about, who does it belong to)
+	// iat = issued at time
+	const timestamp = new Date().getTime();
+	return jwt.encode({ 
+		sub: user.id, 
+		iat: timestamp }, 
+	config.secret);
+}
 
 exports.signup = function(req, res, next) {
 	const email = req.body.email;
@@ -33,7 +46,7 @@ exports.signup = function(req, res, next) {
 			}
 
 			// success
-			res.json({ success: true });
+			res.json({ token: tokenForUser(user) });
 
 			// when the user signs up successfully we consider them signed in, so we need to send provide a token.
 		});
